@@ -14,22 +14,22 @@ import com.openpapers.documentumclient.resource.service.MongoCoreService;
 @Configuration
 public class DocumentumClientApplication {
 
-	@Autowired
-	MongoCoreService mongoCoreService;
+    @Autowired
+    MongoCoreService mongoCoreService;
 
 
-	@Autowired
-	DynamoCoreService dynamoCoreService;
+    @Autowired
+    DynamoCoreService dynamoCoreService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(DocumentumClientApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DocumentumClientApplication.class, args);
+    }
 
-	@Bean
-	@Qualifier("Mongo_Client")
-	public DocumentOrchestrator getMongoDocumentOrchestrator() {
-		return new DocumentOrchestrator.ConfigBuilder().setRepoIdentifier(mongoCoreService).build();
-	}
+    @Bean
+    @Qualifier("Mongo_Client")
+    public DocumentOrchestrator getMongoDocumentOrchestrator() {
+        return new DocumentOrchestrator.ConfigBuilder().setRepoIdentifier(mongoCoreService).build();
+    }
 
 
     @Bean

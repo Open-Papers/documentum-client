@@ -38,7 +38,7 @@ public class BaseController {
     private final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     @ApiOperation("Search APi for Workflow")
-    @RequestMapping(value = "/com/search", method = RequestMethod.POST)
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
     public ResponseEntity<Collection<GreenDocument>> search(@RequestBody SearchParameter searchParams) {
         return ResponseEntity.ok(orchestrator.search(searchParams));
     }
