@@ -11,7 +11,6 @@
 	<groupId>com.openpapers</groupId>
 	<artifactId>documentum-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 	<name>documentum-client</name>
 	<description>Documentum Client</description>
 
