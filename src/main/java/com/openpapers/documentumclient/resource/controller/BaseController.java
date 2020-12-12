@@ -25,7 +25,7 @@ public class BaseController {
 
   
     @Autowired
-    @Qualifier("Dynamo_Client")
+    @Qualifier("Mongo_Client")
     DocumentOrchestrator orchestrator;
 
     private final Logger logger = LoggerFactory.getLogger(BaseController.class);
