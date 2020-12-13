@@ -1,13 +1,9 @@
 package com.openpapers.documentumclient.resource.orchestrator;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import com.openpapers.documentumclient.resource.model.GreenDocument;
 import com.openpapers.documentumclient.resource.search.SearchParameter;
-import com.openpapers.documentumclient.resource.service.DynamoCoreService;
 import com.openpapers.documentumclient.resource.service.ICoreService;
-import com.openpapers.documentumclient.resource.service.MongoCoreService;
 
 import java.util.Collection;
 
@@ -40,6 +36,10 @@ public class DocumentOrchestrator {
 
     public GreenDocument update(GreenDocument doc) {
         return service.update(doc);
+    }
+
+    public String delete(String entityID) {
+        return service.delete(entityID);
     }
 
     public Collection<GreenDocument> search(SearchParameter searchparam) {

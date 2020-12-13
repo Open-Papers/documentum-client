@@ -28,6 +28,11 @@ public class DynamoCoreService implements ICoreService{
     }
 
     @Override
+    public String delete(String entityID) {
+        return null;
+    }
+
+    @Override
     public Long generateEntityID(String collectionName) {
         return null;
     }

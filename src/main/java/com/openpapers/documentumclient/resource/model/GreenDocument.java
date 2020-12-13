@@ -14,7 +14,7 @@ import java.util.Date;
 public class GreenDocument {
 
     @Indexed
-    private Long entityID;
+    private String entityID;
     @Indexed
     private String title;
     @Indexed
@@ -34,7 +34,7 @@ public class GreenDocument {
     @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializer.class)
     private Date updatedDate;
-    private boolean isActive = true;
+    private boolean active = true;
 
     class Comment {
         String id;
@@ -84,15 +84,15 @@ public class GreenDocument {
                 ", updatedBy='" + updatedBy + '\'' +
                 ", uploadedDate=" + uploadedDate +
                 ", updatedDate=" + updatedDate +
-                ", isActive=" + isActive +
+                ", active=" + active +
                 '}';
     }
 
-    public Long getEntityID() {
+    public String getEntityID() {
         return entityID;
     }
 
-    public void setEntityID(Long entityID) {
+    public void setEntityID(String entityID) {
         this.entityID = entityID;
     }
 
@@ -193,10 +193,10 @@ public class GreenDocument {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 }

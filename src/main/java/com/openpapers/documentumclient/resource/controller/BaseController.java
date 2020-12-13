@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.openpapers.documentumclient.resource.model.GreenDocument;
 import com.openpapers.documentumclient.resource.orchestrator.DocumentOrchestrator;
 import com.openpapers.documentumclient.resource.search.SearchParameter;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collection;
 
@@ -37,16 +38,28 @@ public class BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-    @ApiOperation("Search APi for Workflow")
+    @ApiOperation("Search APi for Document")
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public ResponseEntity<Collection<GreenDocument>> search(@RequestBody SearchParameter searchParams) {
         return ResponseEntity.ok(orchestrator.search(searchParams));
     }
 
-    @ApiOperation("Save APi for saving WorkFlow")
+    @ApiOperation("Save APi for Document")
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ResponseEntity<GreenDocument> save(@RequestBody GreenDocument doc) {
         return ResponseEntity.ok(orchestrator.save(doc));
+    }
+
+    @ApiOperation("Update APi for Document")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public ResponseEntity<GreenDocument> update(@RequestBody GreenDocument doc) {
+        return ResponseEntity.ok(orchestrator.update(doc));
+    }
+
+    @ApiOperation("Delete APi for Document")
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public ResponseEntity<String> update(@RequestParam String entityID) {
+        return ResponseEntity.ok(orchestrator.delete(entityID));
     }
 
     @ApiOperation("HeartBeat")

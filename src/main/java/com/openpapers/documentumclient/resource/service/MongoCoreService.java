@@ -5,6 +5,8 @@ package com.openpapers.documentumclient.resource.service;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -22,27 +24,50 @@ import java.util.stream.Collectors;
 
 
 @Service
-public class MongoCoreService implements ICoreService{
+public class MongoCoreService implements ICoreService, ApplicationContextAware {
 
     @Autowired
     MongoDAO mongoDAO;
 
+    MongoCoreService _self;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext){
+        _self = applicationContext.getBean(MongoCoreService.class);
+    }
+
     @Override
     public GreenDocument save(GreenDocument doc) {
-        doc.setEntityID(generateEntityID(AppConstants.MongoApi.mongoDBCollection));
+        doc.setEntityID(String.valueOf(generateEntityID(AppConstants.MongoApi.mongoDBCollection)));
         mongoDAO.insert(doc);
         return doc;
     }
 
     @Override
     public GreenDocument update(GreenDocument doc) {
-        if(null == doc.getEntityID() || doc.getEntityID() <= 0) {
+        if(null == doc.getEntityID() || Long.valueOf(doc.getEntityID()) <= 0) {
             throw new RuntimeException("Invalid document for update");
         }
-        Query query = new Query();
-        query.addCriteria(Criteria.where("entityId").is(doc.getEntityID()));
-        mongoDAO.update(query.getQueryObject().toString(), doc);
+        mongoDAO.update("{entityID : # }", doc);
         return doc;
+    }
+
+    @Override
+    public String delete(String entityID) {
+        if(null == entityID || Long.valueOf(entityID) <= 0) {
+            throw new RuntimeException("Invalid document for delete");
+        }
+        SearchParameter params = new SearchParameter();
+        params.setEntityID(entityID);
+        Collection<GreenDocument> docs = _self.search(params);
+
+
+        if (docs.iterator().hasNext()) {
+            GreenDocument doc = docs.iterator().next();
+            doc.setActive(false);
+            mongoDAO.update("{entityID : # }", doc);
+            return "Soft Delete Successful";
+        }
+        return "Soft Delete Failed";
     }
 
     @Override
@@ -53,10 +78,10 @@ public class MongoCoreService implements ICoreService{
         String finalQuery = StringUtils.EMPTY;
         List<String> qAnd = new LinkedList<String>();
         List<String> qOr = new LinkedList<String>();
-        query.addCriteria(Criteria.where("isActive").is(true));
+        query.addCriteria(Criteria.where("active").is(true));
         queryParts.add(query.getQueryObject().toString());
         if(null != searchparam.getEntityID())
-            qAnd.add("'entityId':'"+searchparam.getEntityID()+"'");
+            qAnd.add("'entityID':'"+searchparam.getEntityID()+"'");
         if(!StringUtils.isEmpty(searchparam.getTitle()))
             qAnd.add("'title': {$regex: '^"+searchparam.getTitle()+"'}");
         if(!StringUtils.isEmpty(searchparam.getDescription()))
@@ -73,6 +98,7 @@ public class MongoCoreService implements ICoreService{
         result = mongoDAO.find(finalQuery);
         return result;
     }
+
 
     @Override
     public Long generateEntityID(String collectionName) {

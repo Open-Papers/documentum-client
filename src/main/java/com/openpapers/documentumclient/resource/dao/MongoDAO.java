@@ -44,7 +44,7 @@ public class MongoDAO {
 
     public void update(String query,GreenDocument document) {
         MongoCollection  refData = jongo.getCollection(AppConstants.MongoApi.mongoDBCollection);
-        refData.update(query, document);
+        refData.update(query, document.getEntityID()).upsert().with(document);
     }
 
 

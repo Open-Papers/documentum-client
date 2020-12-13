@@ -3,7 +3,7 @@ package com.openpapers.documentumclient.resource.search;
 import java.util.Collection;
 
 public class SearchParameter {
-    private Long entityID;
+    private String entityID;
     private String title;
     private String description;
     private Collection<String> tags;
@@ -18,11 +18,11 @@ public class SearchParameter {
                 '}';
     }
 
-    public Long getEntityID() {
+    public String getEntityID() {
         return entityID;
     }
 
-    public void setEntityID(Long entityID) {
+    public void setEntityID(String entityID) {
         this.entityID = entityID;
     }
 
