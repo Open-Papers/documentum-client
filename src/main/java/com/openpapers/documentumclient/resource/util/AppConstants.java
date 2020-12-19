@@ -3,7 +3,7 @@ package com.openpapers.documentumclient.resource.util;
 public class AppConstants {
 
     public interface MongoApi{
-        public static String mongoDB = "development";
-        public static String mongoDBCollection = "documentbase";
+        public static String mongoDB = "mongo.DB";
+        public static String mongoDBCollection = "mongo.DBCollection";
     }
 }

@@ -9,6 +9,7 @@ import com.openpapers.documentumclient.resource.util.DateSerializer;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Objects;
 
 @Document
 public class GreenDocument {
@@ -23,9 +24,9 @@ public class GreenDocument {
     private String contentKey;
     private String contentLink;
     private String contentSize;
-    private Collection<?> comments;
+    private Collection<Comment> comments;
     @Indexed
-    private Collection<String> tags;
+    private Collection<Tag> tags;
     private String uploadedBy;
     private String updatedBy;
     @JsonSerialize(using = DateSerializer.class)
@@ -35,38 +36,6 @@ public class GreenDocument {
     @JsonDeserialize(using = DateDeserializer.class)
     private Date updatedDate;
     private boolean active = true;
-
-    class Comment {
-        String id;
-        @JsonSerialize(using = DateSerializer.class)
-        @JsonDeserialize(using = DateDeserializer.class)
-        Date timeStamp;
-        String content;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public Date getTimeStamp() {
-            return timeStamp;
-        }
-
-        public void setTimeStamp(Date timeStamp) {
-            this.timeStamp = timeStamp;
-        }
-
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-    }
 
     @Override
     public String toString() {
@@ -144,19 +113,19 @@ public class GreenDocument {
         this.contentSize = contentSize;
     }
 
-    public Collection<?> getComments() {
+    public Collection<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(Collection<?> comments) {
+    public void setComments(Collection<Comment> comments) {
         this.comments = comments;
     }
 
-    public Collection<String> getTags() {
+    public Collection<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Collection<String> tags) {
+    public void setTags(Collection<Tag> tags) {
         this.tags = tags;
     }
 
@@ -198,5 +167,18 @@ public class GreenDocument {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GreenDocument that = (GreenDocument) o;
+        return entityID.equals(that.entityID);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entityID);
     }
 }

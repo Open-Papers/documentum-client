@@ -29,6 +29,7 @@ public class MongoCoreService implements ICoreService, ApplicationContextAware {
     @Autowired
     MongoDAO mongoDAO;
 
+
     MongoCoreService _self;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext){
@@ -37,7 +38,7 @@ public class MongoCoreService implements ICoreService, ApplicationContextAware {
 
     @Override
     public GreenDocument save(GreenDocument doc) {
-        doc.setEntityID(String.valueOf(generateEntityID(AppConstants.MongoApi.mongoDBCollection)));
+        doc.setEntityID(String.valueOf(generateEntityID()));
         mongoDAO.insert(doc);
         return doc;
     }
@@ -87,13 +88,13 @@ public class MongoCoreService implements ICoreService, ApplicationContextAware {
         if(!StringUtils.isEmpty(searchparam.getDescription()))
             qAnd.add("'description':{$regex: '"+searchparam.getDescription()+"'}");
         if(!CollectionUtils.isEmpty(searchparam.getTags()))
-            qAnd.add("'tags':{$in:[ "+searchparam.getTags().stream().map(t -> t.toString()).collect(Collectors.joining(",","'","'"))+"]}");
+            qAnd.add("'tags':{$elemMatch:{ "+searchparam.getTags().stream().map(t ->"'value':'"+t.getValue()+"'").
+                    collect(Collectors.joining(","))+"} }");
         StringBuilder finalAnd = new StringBuilder(" { $and: [");
-        qAnd.stream().map(q ->"{"+q+"}").forEach(qc->{
-            finalAnd.append(qc);
-        });
-        finalAnd.append("] }");
-        queryParts.add(finalAnd.toString());
+        finalAnd = finalAnd.append(qAnd.stream().map(q -> "{"+q+"}").collect(Collectors.joining(","))).append("] }");
+        if(!CollectionUtils.isEmpty(qAnd)){
+            queryParts.add(finalAnd.toString());
+        }
         finalQuery = "{$and:["+queryParts.stream().map(i -> i.toString()).collect(Collectors.joining(","))+"]}";
         result = mongoDAO.find(finalQuery);
         return result;
@@ -101,9 +102,9 @@ public class MongoCoreService implements ICoreService, ApplicationContextAware {
 
 
     @Override
-    public Long generateEntityID(String collectionName) {
+    public Long generateEntityID() {
         Long entityId;
-        entityId = mongoDAO.getDocumentCount(collectionName);
+        entityId = mongoDAO.getDocumentCount();
         if(null == entityId)
             throw new RuntimeException("Unable to generate document ID");
         else

@@ -33,7 +33,7 @@ public class DynamoCoreService implements ICoreService{
     }
 
     @Override
-    public Long generateEntityID(String collectionName) {
+    public Long generateEntityID() {
         return null;
     }
 
