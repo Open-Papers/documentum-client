@@ -12,6 +12,6 @@ public interface ICoreService {
     public GreenDocument update(GreenDocument doc);
     public Collection<GreenDocument> search(SearchParameter searchparam);
     public String delete(String entityID);
-    Long generateEntityID(String collectionName);
+    Long generateEntityID();
 
 }

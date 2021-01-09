@@ -1,12 +1,14 @@
 package com.openpapers.documentumclient.resource.search;
 
+import com.openpapers.documentumclient.resource.model.Tag;
+
 import java.util.Collection;
 
 public class SearchParameter {
     private String entityID;
     private String title;
     private String description;
-    private Collection<String> tags;
+    private Collection<Tag> tags;
 
     @Override
     public String toString() {
@@ -42,11 +44,11 @@ public class SearchParameter {
         this.description = description;
     }
 
-    public Collection<String> getTags() {
+    public Collection<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(Collection<String> tags) {
+    public void setTags(Collection<Tag> tags) {
         this.tags = tags;
     }
 
