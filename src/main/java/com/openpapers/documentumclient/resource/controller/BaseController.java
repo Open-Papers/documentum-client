@@ -1,6 +1,9 @@
 package com.openpapers.documentumclient.resource.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.util.JSONParseException;
 import com.openpapers.documentumclient.resource.model.HealthMetric;
 import com.openpapers.documentumclient.resource.service.UtilityService;
 import io.swagger.annotations.Api;
@@ -9,15 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import com.openpapers.documentumclient.resource.model.GreenDocument;
 import com.openpapers.documentumclient.resource.orchestrator.DocumentOrchestrator;
 import com.openpapers.documentumclient.resource.search.SearchParameter;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 
@@ -35,6 +37,8 @@ public class BaseController {
     UtilityService utilityService;
 
 
+    @Autowired
+    ObjectMapper mapper;
 
     private final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
@@ -45,9 +49,10 @@ public class BaseController {
     }
 
     @ApiOperation("Save APi for Document")
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public ResponseEntity<GreenDocument> save(@RequestBody GreenDocument doc) {
-        return ResponseEntity.ok(orchestrator.save(doc));
+    @RequestMapping(value = "/save", method = RequestMethod.POST,consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = "application/json")
+    public ResponseEntity<GreenDocument> save(@RequestParam(name = "doc") String doc,
+                                              @RequestParam(name = "file") MultipartFile file) throws JsonProcessingException {
+        return ResponseEntity.ok(orchestrator.save(mapper.readValue(doc,GreenDocument.class),file));
     }
 
     @ApiOperation("Update APi for Document")

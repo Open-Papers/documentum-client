@@ -70,7 +70,6 @@
 			<version>3.9</version>
 		</dependency>
 
-
 		<!-- Swagger dependencies -->
 		<dependency>
 			<groupId>io.springfox</groupId>

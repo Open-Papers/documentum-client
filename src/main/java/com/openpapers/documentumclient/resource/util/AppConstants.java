@@ -6,4 +6,8 @@ public class AppConstants {
         public static String mongoDB = "mongo.DB";
         public static String mongoDBCollection = "mongo.DBCollection";
     }
+
+    public interface ContentStorageClientApi {
+        public static String endPoint = "storage.client.endpoint";
+    }
 }

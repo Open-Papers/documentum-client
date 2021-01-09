@@ -13,15 +13,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -69,10 +70,16 @@ class BaseControllerTest {
 
 
     GreenDocument save() throws Exception{
+
+        MockMultipartFile file
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
+
         GreenDocument testDoc = new GreenDocument();
-        testDoc.setContentKey("test-aws-key"+UUID.randomUUID());
-        testDoc.setContentLink("test-aws-link"+UUID.randomUUID());
-        testDoc.setContentSize("15mb");
         testDoc.setDescription("test-desc"+UUID.randomUUID());
         testDoc.setTitle("test"+UUID.randomUUID());
         testDoc.setDocAbstract("test-abstract"+UUID.randomUUID());
@@ -90,7 +97,14 @@ class BaseControllerTest {
         testDoc.setUpdatedDate(new Date());
         testDoc.setUploadedDate(new Date());
         String json = objectMapper.writeValueAsString(testDoc);
-        MvcResult result = this.mockMvc.perform(post("/api/base/save").content(json).contentType(MediaType.APPLICATION_JSON))
+       /* MvcResult result = this.mockMvc.perform(post("/api/base/save").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        GreenDocument data = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<GreenDocument>() {});
+        return data;*/
+
+        MvcResult result = this.mockMvc.perform(multipart("/api/base/save").file(file).param("doc",json))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andReturn();
